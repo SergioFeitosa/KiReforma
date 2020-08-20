@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<title>Campanha</title>
+<!--Import Google Icon Font-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+
+<!--Import materialize.css-->
+<link href="/materialize/css/materialize.min.css"
+	media="screen,projection" type="text/css" rel="stylesheet" />
+<!--Import main.css-->
+<link href="/css/main/main.css" media="screen,projection" type="text/css"
+	rel="stylesheet" />
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!--JavaScript at end of body for optimized loading-->
+<script type="text/javascript" src="/materialize/js/materialize.min.js"></script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		var elems = document.querySelectorAll('.sidenav');
+		var instances = M.Sidenav.init(elems);
+	});
+
+	document.addEventListener('DOMContentLoaded', function() {
+		var elems = document.querySelectorAll('.modal');
+		var instances = M.Modal.init(elems);
+	});
+	document.addEventListener('DOMContentLoaded', function() {
+		var elems = document.querySelectorAll('select');
+		var instances = M.FormSelect.init(elems);
+	});
+</script>
+</head>
+<body>
+	<header>
+		<nav>
+			<div class="nav-wrapper">
+				<a href="#" class="brand-logo">Atualização de Campanhas</a>
+				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="/" class="waves-effect waves-light "> <i
+							class="material-icons right">home</i>Home
+					</a></li>
+
+					<li><a href="/clientes" class="waves-effect waves-light ">
+							<i class="material-icons left">people</i>Cliente
+					</a></li>
+					<li><a href="/campanhas" class="waves-effect waves-light ">
+							<i class="material-icons left">cake</i>Campanha
+					</a></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+
+
+	<div style="color: red; background-color: powderblue;">
+		<th:block th:include="mensagemValidacao"></th:block>
+	</div>
+	<div class="formCampanha">
+		<form class="container " method="POST" th:object="${campanha}">
+			<h5>Campanha</h5>
+			Nome:<input type="text" th:value="${campanha.nome}" name="nome" />
+			<div class="row">
+				<div class="input-field col s6">
+					Qual seu time de coração: <select id="esquadrao" name="esquadrao"
+						th:field="*{esquadrao}">
+						<option value='' selected>Choose your option</option>
+						<option
+							th:each="esquadraox : ${T(com.example.demo.time.Esquadrao).values()}"
+							th:value="${esquadraox}" th:text="${esquadraox}"></option>
+					</select>
+				</div>
+				<div class="input-field col s3">
+					Data Início:<input type="date" th:value="${{campanha.dataInicio}}"
+						name="dataInicio" id="dataInicio" />
+				</div>
+				<div class="input-field col s3">
+					Data Término:<input type="date"
+						th:value="${{campanha.dataTermino}}" name="dataTermino"
+						id="dataTermino" />
+				</div>
+			</div>
+			<button type="submit" class="waves-effect waves-light btn">Salvar</button>
+		</form>
+	</div>
+
+</body>
+</html>

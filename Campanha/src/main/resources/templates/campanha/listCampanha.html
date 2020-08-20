@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<title>Campanha</title>
+<!--Import Google Icon Font-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+
+<!--Import materialize.css-->
+<link href="/materialize/css/materialize.min.css"
+	media="screen,projection" type="text/css" rel="stylesheet" />
+
+<!--Import main.css-->
+<link href="/css/main/main.css" media="screen,projection" type="text/css"
+	rel="stylesheet" />
+
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!--JavaScript at end of body for optimized loading-->
+<script type="text/javascript" src="/materialize/js/materialize.min.js"></script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		var elems = document.querySelectorAll('.sidenav');
+		var instances = M.Sidenav.init(elems);
+	});
+
+	document.addEventListener('DOMContentLoaded', function() {
+		var elems = document.querySelectorAll('.modal');
+		var instances = M.Modal.init(elems);
+	});
+</script>
+</head>
+<body>
+	<header>
+		<nav>
+			<div class="nav-wrapper">
+				<a href="#" class="brand-logo">Lista de Campanhas</a>
+				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="/" class="waves-effect waves-light "> <i
+							class="material-icons right">home</i>Home
+					</a></li>
+					<li><a href="/clientes" class="waves-effect waves-light ">
+							<i class="material-icons left">people</i>Cliente
+					</a></li>
+					<li><a href="/campanhas" class="waves-effect waves-light ">
+							<i class="material-icons left">cake</i>Campanha
+					</a></li>
+					<li><a href="/cadastrarCampanha"
+						class="waves-effect waves-light btn"> <i
+							class="material-icons left">add</i>Cadastrar Campanha
+					</a></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<div class="container listCampanha">
+		<h5>Campanhas</h5>
+
+		<table>
+			<thead>
+				<tr>
+					<th>Nome</th>
+					<th>Time</th>
+					<th>Data Início</th>
+					<th>Data Término</th>
+					<th>Ações</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="campanha: ${campanhas}">
+					<td><a
+						th:href="@{/detalhesCampanha/{id}(id = ${campanha.id})}"> <span
+							th:text="${campanha.nome}"></span>
+					</a></td>
+					<td><span th:text="${campanha.esquadrao}"></span></td>
+					<td><span
+						th:text="${#dates.format(new java.util.Date(campanha.dataInicio),'dd/MM/yyyy')}"></span></td>
+					<td><span
+						th:text="${#dates.format(new java.util.Date(campanha.dataTermino),'dd/MM/yyyy')}"></span></td>
+					<td><a
+						th:href="@{/detalhesCampanha/{id}(id = ${campanha.id})}"
+						title="Detalhes" class="waves-effect waves-light"><i
+							class="material-icons blue600 left">details</i></a> <a
+						th:href="${(#mvc.url('CC#editarCampanha').arg(0, campanha.id)).build()}"
+						title="Edit" class="waves-effect waves-light"><i
+							class="material-icons orange600 left">edit</i></a> <a
+						th:href="${(#mvc.url('CC#deletarCampanha').arg(0, campanha.id)).build()}"
+						title="Delete" class="waves-effect waves-light"><i
+							class="material-icons red600 left">delete</i></a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

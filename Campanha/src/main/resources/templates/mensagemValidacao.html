@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<title>Campanha</title>
+<!--Import Google Icon Font-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+
+<!--Import materialize.css-->
+<link href="/materialize/css/materialize.min.css"
+	media="screen,projection" type="text/css" rel="stylesheet" />
+
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!--JavaScript at end of body for optimized loading-->
+<script type="text/javascript" src="/materialize/js/materialize.min.js"></script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		var elems = document.querySelectorAll('.sidenav');
+		var instances = M.Sidenav.init(elems);
+	});
+
+	document.addEventListener('DOMContentLoaded', function() {
+		var elems = document.querySelectorAll('.modal');
+		var instances = M.Modal.init(elems);
+	});
+</script>
+</head>
+<body>
+<div class="alert aleret-success alert-dismisssible" role="alert" th:if="${not #strings.isEmpty(mensagem)}">
+	<span th:text="${mensagem}"></span>
+</div> 
+</body>
+</html>
