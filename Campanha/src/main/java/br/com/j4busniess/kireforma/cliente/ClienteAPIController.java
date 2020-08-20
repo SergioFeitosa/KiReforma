@@ -9,17 +9,12 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,8 +23,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.com.j4busniess.kireforma.campanha.Campanha;
 import br.com.j4busniess.kireforma.campanha.CampanhaService;
 
-@RestController
-public class ClienteController {
+@Controller
+public class ClienteAPIController {
 
 
 	@Autowired
@@ -156,15 +151,15 @@ public class ClienteController {
 		return clientesJson;
 	}
 
-	
-	
 	// service implementado
-	@GetMapping("/api/clientes")
-	public ResponseEntity<Iterable<Cliente>> listaClientes() {
+	@RequestMapping("/clientes")
+	public ModelAndView listaClientes() {
+		ModelAndView mv = new ModelAndView("cliente/listCliente");
 
 		Iterable<Cliente> clientes = clienteService.getAll();
 
-		return ResponseEntity.status(HttpStatus.OK).body(clientes);
+		mv.addObject("clientes", clientes);
+		return mv;
 
 	}
 
