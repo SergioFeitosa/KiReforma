@@ -20,7 +20,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.j4busniess.kireforma.api.ClienteConsumingJson;
 import br.com.j4busniess.kireforma.campanha.Campanha;
 import br.com.j4busniess.kireforma.campanha.CampanhaService;
 
@@ -77,27 +76,6 @@ public class ClienteController {
 		attributes.addFlashAttribute("mensagem", "Cliente alterado com sucesso");
 		ModelAndView mv = new ModelAndView("redirect:/clientes");
 		return mv;
-	}
-
-	@RequestMapping("/clienteConsumingJsonAll")
-	public ModelAndView clienteConsumingJsonAll() {
-
-		String cliente = this.clienteConsumingJsonAllPrepare();
-		ModelAndView mv = new ModelAndView("json/formJson");
-		mv.addObject("cliente", cliente);
-		return mv;
-	}
-
-	
-	public String clienteConsumingJsonAllPrepare() {
-
-		String clientesString = null;
-		try {
-			clientesString = ClienteConsumingJson.buscaClienteAll();
-		} catch (Exception e) {
-		}
-		return clientesString;
-
 	}
 
 	@RequestMapping("/clienteConsumingJsonNome/{nome}")
