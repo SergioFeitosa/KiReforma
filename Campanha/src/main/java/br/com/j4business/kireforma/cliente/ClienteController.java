@@ -3,7 +3,6 @@ package br.com.j4business.kireforma.cliente;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import br.com.j4business.kireforma.campanha.Campanha;
 import br.com.j4business.kireforma.campanha.CampanhaService;
 
@@ -33,124 +30,7 @@ public class ClienteController {
 	@Autowired
 	private ClienteService clienteService;
 
-	@RequestMapping(value = "/editarCliente")
-	public ModelAndView editarCliente(long id) {
-
-		Cliente cliente = clienteService.getClienteById(id);
-
-		ModelAndView mv = new ModelAndView("cliente/editCliente");
-		mv.addObject("cliente", cliente);
-		return mv;
-	}
-
-	@RequestMapping(value = "/deletarCliente")
-	public String deletarCliente(long id, RedirectAttributes attributes) {
-
-		Cliente cliente = clienteService.getClienteById(id);
-		try {
-			clienteService.deleteCliente(cliente);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-
-		return "redirect:/clientes";
-	}
-
-	// service implementado
-	@RequestMapping(value = "/editarCliente", method = RequestMethod.POST)
-	public ModelAndView edit(@Valid Cliente cliente, BindingResult result, RedirectAttributes attributes) {
-
-		if (result.hasErrors()) {
-			attributes.addFlashAttribute("mensagem", "Verifique os campos");
-			ModelAndView mv = new ModelAndView("redirect:/editarCliente");
-			mv.addObject("cliente", cliente);
-			return mv;
-		}
-
-		try {
-			clienteService.saveCliente(cliente);
-		} catch (Exception e) {
-			attributes.addFlashAttribute("mensagem", "Falha na atualização da Campanha. Verifique os campos");
-		}
-
-		attributes.addFlashAttribute("mensagem", "Cliente alterado com sucesso");
-		ModelAndView mv = new ModelAndView("redirect:/clientes");
-		return mv;
-	}
-
-	@RequestMapping("/clienteConsumingJsonNome/{nome}")
-	public ModelAndView clienteConsumingJsonNome(@PathVariable("nome") String nome) {
-
-		String cliente = this.clienteConsumingJsonNomePrepare(nome);
-		ModelAndView mv = new ModelAndView("json/formJson");
-		mv.addObject("cliente", cliente);
-		return mv;
-	}
-
 	
-	public String clienteConsumingJsonNomePrepare(String nome) {
-
-		String cliente = null;
-		try {
-			cliente = this.clienteRespondingJsonNomePrepare(nome);
-		} catch (Exception e) {
-		}
-		return cliente;
-
-	}
-
-	@RequestMapping("/clienteRespondingJsonNome/{nome}")
-	public ModelAndView clienteRespondingJsonNome(@PathVariable("nome") String nome) {
-
-		String cliente = this.clienteRespondingJsonNomePrepare(nome);
-		ModelAndView mv = new ModelAndView("json/formJson");
-		mv.addObject("cliente", cliente);
-		return mv;
-	}
-
-	
-	public String clienteRespondingJsonNomePrepare(String nome) {
-
-		String clientesJson = "";
-		List<Cliente> clientes = clienteService.getClienteByNome(nome);
-		ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			clientesJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(clientes);
-			//System.out.println(clientesJson);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return clientesJson;
-	}
-
-	
-	@RequestMapping("/clienteRespondingJsonAll")
-	public ModelAndView clienteRespondingJsonAll() {
-
-		String cliente = this.clienteRespondingJsonAllPrepare();
-		ModelAndView mv = new ModelAndView("json/formJson");
-		mv.addObject("cliente", cliente);
-		return mv;
-	}
-
-	
-	
-	public String clienteRespondingJsonAllPrepare() {
-
-		String clientesJson = "";
-		List<Cliente> clientes = clienteService.getAllList();
-		ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			clientesJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(clientes);
-			//System.out.println(clientesJson);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return clientesJson;
-	}
-
 	// service implementado
 	@RequestMapping("/clientes")
 	public ModelAndView listaClientes() {
@@ -194,6 +74,55 @@ public class ClienteController {
 		mv.addObject("cliente", cliente);
 		return mv;
 	}
+
+
+	
+	@RequestMapping(value = "/editarCliente")
+	public ModelAndView editarCliente(long id) {
+
+		Cliente cliente = clienteService.getClienteById(id);
+
+		ModelAndView mv = new ModelAndView("cliente/editCliente");
+		mv.addObject("cliente", cliente);
+		return mv;
+	}
+
+	// service implementado
+	@RequestMapping(value = "/editarCliente", method = RequestMethod.POST)
+	public ModelAndView edit(@Valid Cliente cliente, BindingResult result, RedirectAttributes attributes) {
+
+		if (result.hasErrors()) {
+			attributes.addFlashAttribute("mensagem", "Verifique os campos");
+			ModelAndView mv = new ModelAndView("redirect:/editarCliente");
+			mv.addObject("cliente", cliente);
+			return mv;
+		}
+
+		try {
+			clienteService.saveCliente(cliente);
+		} catch (Exception e) {
+			attributes.addFlashAttribute("mensagem", "Falha na atualização da Campanha. Verifique os campos");
+		}
+
+		attributes.addFlashAttribute("mensagem", "Cliente alterado com sucesso");
+		ModelAndView mv = new ModelAndView("redirect:/clientes");
+		return mv;
+	}
+
+	
+	@RequestMapping(value = "/deletarCliente")
+	public String deletarCliente(long id, RedirectAttributes attributes) {
+
+		Cliente cliente = clienteService.getClienteById(id);
+		try {
+			clienteService.deleteCliente(cliente);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		return "redirect:/clientes";
+	}
+
 
 	// service implementado
 	@RequestMapping(value = "/detalhesCliente/{id}", method = RequestMethod.GET)
