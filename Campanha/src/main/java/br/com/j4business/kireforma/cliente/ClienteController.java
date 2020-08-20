@@ -77,7 +77,7 @@ public class ClienteController {
 
 
 	
-	@RequestMapping(value = "/editarCliente")
+	@RequestMapping(value = "/editarCliente", method = RequestMethod.GET)
 	public ModelAndView editarCliente(long id) {
 
 		Cliente cliente = clienteService.getClienteById(id);
