@@ -1,0 +1,10 @@
+{
+  "Cliente":
+    {
+      "id": 1,
+      "nome": "Sergio Feitosa1",
+      "email": "sergiofeitosa1@gmail.com",
+      "dataNasc": "2020-04-13T03:00:00.000Z",
+      "esquadrao": "BRAGANTINO"
+    }
+}
