@@ -1,8 +1,11 @@
 package br.com.j4business.kireforma.cliente;
 
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,8 +44,10 @@ public class ClienteAPIController {
 	}
 
 	// service implementado
-	@PostMapping("/api/clientes")
-	public ResponseEntity<Iterable<Cliente>> CriaAPIClientes(@RequestBody Cliente cliente) {
+	@PostMapping(value = "/api/clientes",
+                 produces = MediaType.APPLICATION_JSON_VALUE,
+                 consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Iterable<Cliente>> CriaAPIClientes(@Valid @RequestBody Cliente cliente) {
 
 		try {
 			clienteService.cadastrarCliente(cliente);
@@ -55,8 +60,9 @@ public class ClienteAPIController {
 
 	}
 
-	@PutMapping("/api/clientes/{id}")
-	public ResponseEntity<Cliente> editarAPICliente(@PathVariable("id") long id,@RequestBody Cliente cliente) {
+	@PutMapping(value = "/api/clientes/{id}", 
+				produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Cliente> editarAPICliente(@PathVariable("id") long id, @Valid  @RequestBody Cliente cliente) {
 
 		Cliente clienteCad = clienteService.getClienteById(id);
 		

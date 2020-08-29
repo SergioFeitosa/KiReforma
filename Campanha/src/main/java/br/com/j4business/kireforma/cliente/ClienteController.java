@@ -23,14 +23,12 @@ import br.com.j4business.kireforma.campanha.CampanhaService;
 @Controller
 public class ClienteController {
 
-
 	@Autowired
 	private CampanhaService campanhaService;
 
 	@Autowired
 	private ClienteService clienteService;
 
-	
 	// service implementado
 	@RequestMapping("/clientes")
 	public ModelAndView listaClientes() {
@@ -75,8 +73,6 @@ public class ClienteController {
 		return mv;
 	}
 
-
-	
 	@RequestMapping(value = "/editarCliente", method = RequestMethod.GET)
 	public ModelAndView editarCliente(long id) {
 
@@ -109,7 +105,6 @@ public class ClienteController {
 		return mv;
 	}
 
-	
 	@RequestMapping(value = "/deletarCliente")
 	public String deletarCliente(long id, RedirectAttributes attributes) {
 
@@ -122,7 +117,6 @@ public class ClienteController {
 
 		return "redirect:/clientes";
 	}
-
 
 	// service implementado
 	@RequestMapping(value = "/detalhesCliente/{id}", method = RequestMethod.GET)

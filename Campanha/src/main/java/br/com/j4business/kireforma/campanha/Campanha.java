@@ -17,75 +17,40 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.j4business.kireforma.cliente.Cliente;
 import br.com.j4business.kireforma.time.Esquadrao;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@AllArgsConstructor(access = AccessLevel.PROTECTED )
+@NoArgsConstructor
 public class Campanha implements Serializable {
 
 	private static final long serialVersionUID = 1577875995263833134L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Getter
 	private long id;
 	@NotBlank
+	@Getter @Setter
 	private String nome;
 	@NotNull
+	@Getter @Setter
 	private Esquadrao esquadrao;
 	@NotNull
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Getter @Setter
 	private Date dataInicio;
 	@NotNull
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Getter @Setter
 	private Date dataTermino;
 
 	@ManyToMany(cascade = CascadeType.ALL)
+	@Getter @Setter
 	private Set<Cliente> cliente;
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public Esquadrao getEsquadrao() {
-		return esquadrao;
-	}
-
-	public void setEsquadrao(Esquadrao esquadrao) {
-		this.esquadrao = esquadrao;
-	}
-
-	public Date getDataInicio() {
-		return dataInicio;
-	}
-
-	public void setDataInicio(Date dataInicio) {
-		this.dataInicio = dataInicio;
-	}
-
-	public Date getDataTermino() {
-		return dataTermino;
-	}
-
-	public void setDataTermino(Date dataTermino) {
-		this.dataTermino = dataTermino;
-	}
-
-	public Set<Cliente> getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Set<Cliente> cliente) {
-		this.cliente = cliente;
-	}
 
 }

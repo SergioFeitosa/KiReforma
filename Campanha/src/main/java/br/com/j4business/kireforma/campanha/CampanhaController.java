@@ -24,17 +24,18 @@ public class CampanhaController {
 	@Autowired
 	private CampanhaService campanhaService;
 
+	// service implementado
+	@RequestMapping("/campanhas")
+	public ModelAndView listaCampanhas() {
 
-	@RequestMapping(value = "/editarCampanha")
-	public ModelAndView editarCampanha(long id) {
-
-		Campanha campanha = campanhaService.getCampanhaById(id);
-
-		ModelAndView mv = new ModelAndView("campanha/editCampanha");
-		mv.addObject("campanha", campanha);
+		ModelAndView mv = new ModelAndView("campanha/listCampanha");
+		
+		Iterable<Campanha> campanhas = campanhaService.getAllCampanhaNaoVencidas();
+		
+		mv.addObject("campanhas", campanhas);
+		
 		return mv;
 	}
-	
 
 	@RequestMapping(value = "/cadastrarCampanha", method = RequestMethod.GET)
 	public String form(@ModelAttribute Campanha campanha) {
@@ -62,19 +63,41 @@ public class CampanhaController {
 		return "redirect:/cadastrarCampanha";
 	}
 
+
+	@RequestMapping(value = "/editarCampanha")
+	public ModelAndView editarCampanha(long id) {
+
+		Campanha campanha = campanhaService.getCampanhaById(id);
+
+		ModelAndView mv = new ModelAndView("campanha/editCampanha");
+		mv.addObject("campanha", campanha);
+		return mv;
+	}
 	
 	// service implementado
-	@RequestMapping("/campanhas")
-	public ModelAndView listaCampanhas() {
-		ModelAndView mv = new ModelAndView("campanha/listCampanha");
-		
-		Iterable<Campanha> campanhas = campanhaService.getAllCampanhaNaoVencidas();
-		
-		mv.addObject("campanhas", campanhas);
-		return mv;
+	@RequestMapping(value = "/editarCampanha", method = RequestMethod.POST)
+	public ModelAndView edit(@Valid Campanha campanha, BindingResult result, RedirectAttributes attributes) {
 
+		if (result.hasErrors()) {
+			attributes.addFlashAttribute("mensagem", "Verifique os campos");
+			ModelAndView mv = new ModelAndView("redirect:/editarCampanha");
+			mv.addObject("campanha", campanha);
+			return mv;
+		}
+
+		try {
+			campanhaService.saveCampanha(campanha);
+		} catch (Exception e) {
+			attributes.addFlashAttribute("mensagem", "Falha na atualização da Campanha. Verifique os campos");
+		}
+
+		attributes.addFlashAttribute("mensagem", "Campanha alterado com sucesso");
+		ModelAndView mv = new ModelAndView("redirect:/campanhas");
+		return mv;
 	}
 
+
+	
 	// service implementado
 	@RequestMapping(value = "/detalhesCampanha/{id}", method = RequestMethod.GET)
 	public ModelAndView detalhesCampanha(@PathVariable("id") long id, @ModelAttribute Cliente cliente) {

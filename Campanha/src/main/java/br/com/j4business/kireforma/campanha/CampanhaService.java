@@ -1,7 +1,5 @@
 package br.com.j4business.kireforma.campanha;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -69,9 +67,7 @@ public class CampanhaService {
 
 	public Campanha saveCampanha(Campanha campanha) {
 
-		campanhaRepository.save(campanha);
-
-		return campanha;
+		return campanhaRepository.save(campanha);
 	}
 
 	public Iterable<Campanha> getAllCampanha() {
@@ -95,7 +91,7 @@ public class CampanhaService {
 	public Campanha detalhesCampanha(long id, Cliente cliente) throws Exception {
 
 		Campanha campanha = this.getCampanhaById(id);
-
+		
 		if (cliente.getCampanha() != null) {
 			cliente.getCampanha().add(campanha);
 		} else {
@@ -144,7 +140,7 @@ public class CampanhaService {
 
 		Optional<Campanha> optionalEntity = campanhaRepository.findById(id);
 		Campanha campanha = optionalEntity.get();
-
+		
 		return campanha;
 	}
 
@@ -248,6 +244,7 @@ public class CampanhaService {
 				campanha.getCliente().add(cliente);
 			}
 
+			
 			campanha = this.saveCampanha(campanha);
 
 			if (cliente.getCampanha() != null) {
@@ -264,9 +261,9 @@ public class CampanhaService {
 	}
 
 	private void validaNome(Campanha campanha) throws Exception {
-		Iterable<Campanha> campanhasX = this.getCampanhaByNome(campanha.getNome());
+		Iterable<Campanha> campanhas = this.getCampanhaByNome(campanha.getNome());
 
-		if (campanhasX.iterator().hasNext()) {
+		if (campanhas.iterator().hasNext()) {
 			throw new Exception("Mensagem : " + "Nome de Campanha já existente. Verifique os campos");
 		}
 

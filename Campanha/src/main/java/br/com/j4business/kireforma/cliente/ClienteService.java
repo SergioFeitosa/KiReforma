@@ -4,12 +4,14 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,56 +30,58 @@ public class ClienteService {
 	@Autowired
 	private ClienteRepository clienteRepository;
 
-
 	public List<Cliente> getClienteByNome(String nome) {
-		
-		List<Cliente> clientes = clienteRepository.findByNome(nome);
 
-		return clientes;
+		return ((List<Cliente>) clienteRepository
+				.findByNome(nome))
+				.stream()
+				.collect(Collectors.toList());
 	}
 
-
-	
 	public List<Cliente> getAllList() {
-
-		List<Cliente> clientes = clienteRepository.findAll();
-		//Iterable<Cliente> clientes = repositoryJson.findAll();
-
-		return clientes;
+		return ((List<Cliente>) clienteRepository
+				.findAll())
+				.stream()
+				.collect(Collectors.toList());
 	}
 
 	public Iterable<Cliente> getAll() {
+		
+		List<Cliente> clienteList = this.getAllList();
 
-		Iterable<Cliente> clientes = clienteRepository.findAll();
-		//Iterable<Cliente> clientes = repositoryJson.findAll();
-
-		return clientes;
+		Collection<Cliente> ClienteCollection = clienteList;
+		
+	    Iterable<Cliente> clienteIterable = ClienteCollection;
+		
+		return clienteIterable;
 	}
 
 	public Iterable<Cliente> getClienteByEsquadrao(Esquadrao esquadrao) {
 
-		Iterable<Cliente> clientes = clienteRepository.findByEsquadrao(esquadrao);
+		return ((List<Cliente>) clienteRepository
+				.findByEsquadrao(esquadrao))
+				.stream()
+				.collect(Collectors.toList());
 
-		return clientes;
 	}
-	
-	
+
 	public Iterable<Cliente> getClienteByCampanha(Campanha campanha) {
 
-		Iterable<Cliente> clientes = clienteRepository.findByCampanha(campanha);
-
-		return clientes;
+		return ((List<Cliente>) clienteRepository
+				.findByCampanha(campanha))
+				.stream()
+				.collect(Collectors.toList());
 	}
-	
+
 	public Iterable<Cliente> getClienteByEmail(Cliente cliente) {
 
-		Iterable<Cliente> clientes = clienteRepository.findByEmail(cliente.getEmail());
-
-		return clientes;
+		return ((List<Cliente>) clienteRepository
+				.findByEmail(cliente.getEmail())
+				.stream()
+				.collect(Collectors.toList()));
 	}
-	
+
 	public String deleteCliente(Cliente cliente) {
-		
 
 		clienteRepository.delete(cliente);
 
@@ -85,7 +89,7 @@ public class ClienteService {
 	}
 
 	public Cliente getClienteById(long id) {
-		
+
 		Optional<Cliente> optionalEntity = clienteRepository.findById(id);
 		Cliente cliente = optionalEntity.get();
 
@@ -93,16 +97,12 @@ public class ClienteService {
 	}
 
 	public Cliente saveCliente(Cliente cliente) {
-		
-		
-		cliente = clienteRepository.save(cliente);
 
-		return cliente;
+		return clienteRepository.save(cliente);
 	}
 
-
 	public Cliente cadastrarCliente(Cliente cliente) throws Exception {
-		
+
 		ZoneId defaultZoneId = ZoneId.systemDefault();
 
 		LocalDate localDateDataNasc = Instant.ofEpochMilli(cliente.getDataNasc().getTime())
@@ -114,51 +114,52 @@ public class ClienteService {
 			throw new Exception("Mensagem : " + "Data de Nascimento inválida. Verifique os campos");
 		}
 
-		
 		Iterable<Cliente> clientesCadastro = this.getClienteByEmail(cliente);
-		
+
 		if (clientesCadastro.iterator().hasNext()) {
-			throw new Exception ("Cliente já cadastrado.");
+			throw new Exception("Cliente já cadastrado.");
 		}
-		
+
 		try {
-			cliente = this.saveCliente(cliente);			
+			cliente = this.saveCliente(cliente);
 		} catch (Exception e) {
 			throw new Exception("mensagem : Falha na atualização do Cliente. Verifique os campos");
 		}
 
 		try {
-			this.atualizarCampanha(cliente);			
+			this.atualizarCampanha(cliente);
 		} catch (Exception e) {
 			throw new Exception("mensagem : Falha na atualização do Cliente. Verifique os campos");
 		}
-		
+
 		return cliente;
 	}
-	
+
 	public Map<String, Iterable<Campanha>> getCampanhasInscritos(long id) {
 
 		Map<String, Iterable<Campanha>> map = new HashMap<>();
 
 		Cliente cliente = this.getClienteById(id);
-		
+
 		ModelAndView mv = new ModelAndView("cliente/detalhesCliente");
 		mv.addObject("cliente", cliente);
 
 		Iterable<Campanha> campanhas = campanhaService.getCampanhaByEsquadrao(cliente.getEsquadrao());
-		
-		List<Campanha> campanhaInscritoList = new ArrayList<Campanha>(); ;
-		List<Campanha> campanhaNaoInscritoList = new ArrayList<Campanha>(); ;
-		
+
+		List<Campanha> campanhaInscritoList = new ArrayList<Campanha>();
+		;
+		List<Campanha> campanhaNaoInscritoList = new ArrayList<Campanha>();
+		;
+
 		for (Campanha campanha3 : campanhas) {
 			if (campanha3.getCliente().contains(cliente)) {
 				campanhaInscritoList.add(campanha3);
 			} else {
 				campanhaNaoInscritoList.add(campanha3);
 			}
-			
+
 		}
-		
+
 		Iterable<Campanha> campanhaInscrito = campanhaInscritoList;
 		Iterable<Campanha> campanhaNaoInscrito = campanhaNaoInscritoList;
 
@@ -168,10 +169,8 @@ public class ClienteService {
 		return map;
 	}
 
-	
-	
 	private void atualizarCampanha(Cliente cliente) throws Exception {
-		
+
 		Iterable<Campanha> campanhas = campanhaService.getCampanhaByEsquadrao(cliente.getEsquadrao());
 
 		for (Campanha campanha : campanhas) {
@@ -182,13 +181,13 @@ public class ClienteService {
 				campanha.setCliente(new HashSet<Cliente>());
 				campanha.getCliente().add(cliente);
 			}
-			
+
 			try {
 				campanhaService.saveCampanha(campanha);
 			} catch (Exception e) {
 				throw new Exception("mensagem : Falha na atualização do Cliente. Verifique os campos");
 			}
-			
+
 			if (cliente.getCampanha() != null) {
 				cliente.getCampanha().add(campanha);
 			} else {
@@ -197,7 +196,7 @@ public class ClienteService {
 			}
 
 			try {
-				cliente = this.saveCliente(cliente);			
+				cliente = this.saveCliente(cliente);
 			} catch (Exception e) {
 				throw new Exception("mensagem : Falha na atualização do Cliente. Verifique os campos");
 			}
